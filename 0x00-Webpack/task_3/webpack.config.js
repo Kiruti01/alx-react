@@ -1,39 +1,43 @@
-const path = require('path');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const path = require("path");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 
 module.exports = {
-  mode: 'development',
   entry: {
-    header: './modules/header/header.js',
-    body: './modules/body/body.js',
-    footer: './modules/footer/footer.js',
+    header: "./modules/header/header.js",
+    body: "./modules/body/body.js",
+    footer: "./modules/footer/footer.js",
   },
   output: {
-    path: path.resolve(__dirname, 'public'),
-    filename: '[name].js',
-    chunkFilename: '[id].[chunkhash].js',
-  },
-  performance: {
-    maxAssetSize: 1000000,
-  },
-  optimization: {
-    splitChunks: {
-      chunks: 'all',
-    },
+    filename: "[name].bundle.js",
+    path: path.resolve(__dirname, "public"),
   },
   devServer: {
-    contentBase: path.join(__dirname, './public'),
-    compress: true,
+    contentBase: "./public",
+    open: true,
     port: 8564,
   },
-  plugins: [new CleanWebpackPlugin(), new HtmlWebpackPlugin({filename: 'index.html'})],
-  devtool: 'inline-source-map',
+  plugins: [
+    new CleanWebpackPlugin(),
+    new HtmlWebpackPlugin({
+      title: "Output Management",
+    }),
+  ],
+  optimization: {
+    splitChunks: {
+      chunks: "all",
+    },
+  },
+  mode: "development",
   module: {
     rules: [
       {
         test: /\.css$/i,
         use: ["style-loader", "css-loader"],
+      },
+      {
+        test: /\.(png|jpg|gif|svg)$/,
+        loader: "file-loader",
       },
       {
         test: /\.(gif|png|jpe?g|svg)$/i,
@@ -42,11 +46,30 @@ module.exports = {
           {
             loader: "image-webpack-loader",
             options: {
-              bypassOnDebug: true, // webpack@1.x
-              disable: true, // webpack@2.x and newer
+              mozjpeg: {
+                progressive: true,
+              },
+              optipng: {
+                enabled: false,
+              },
+              pngquant: {
+                quality: [0.65, 0.9],
+                speed: 4,
+              },
+              gifsicle: {
+                interlaced: false,
+              },
+              webp: {
+                quality: 75,
+              },
             },
           },
         ],
+      },
+      {
+        test: /\.js$/,
+        enforce: "pre",
+        use: ["source-map-loader"],
       },
     ],
   },
