@@ -3,41 +3,41 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 
 module.exports = {
+  mode: "development",
   entry: {
     header: "./modules/header/header.js",
     body: "./modules/body/body.js",
     footer: "./modules/footer/footer.js",
   },
   output: {
-    filename: "[name].bundle.js",
     path: path.resolve(__dirname, "public"),
+    filename: "[name].js",
+    chunkFilename: "[id].[chunkhash].js",
   },
-  devServer: {
-    contentBase: "./public",
-    open: true,
-    port: 8564,
+  performance: {
+    maxAssetSize: 1000000,
   },
-  plugins: [
-    new CleanWebpackPlugin(),
-    new HtmlWebpackPlugin({
-      title: "Output Management",
-    }),
-  ],
   optimization: {
     splitChunks: {
       chunks: "all",
     },
   },
-  mode: "development",
+  devServer: {
+    contentBase: path.join(__dirname, "./public"),
+    compress: true,
+    port: 8564,
+    open: true,
+  },
+  plugins: [
+    new CleanWebpackPlugin(),
+    new HtmlWebpackPlugin({ filename: "index.html" }),
+  ],
+  devtool: "inline-source-map",
   module: {
     rules: [
       {
         test: /\.css$/i,
         use: ["style-loader", "css-loader"],
-      },
-      {
-        test: /\.(png|jpg|gif|svg)$/,
-        loader: "file-loader",
       },
       {
         test: /\.(gif|png|jpe?g|svg)$/i,
@@ -46,30 +46,11 @@ module.exports = {
           {
             loader: "image-webpack-loader",
             options: {
-              mozjpeg: {
-                progressive: true,
-              },
-              optipng: {
-                enabled: false,
-              },
-              pngquant: {
-                quality: [0.65, 0.9],
-                speed: 4,
-              },
-              gifsicle: {
-                interlaced: false,
-              },
-              webp: {
-                quality: 75,
-              },
+              bypassOnDebug: true, // webpack@1.x
+              disable: true, // webpack@2.x and newer
             },
           },
         ],
-      },
-      {
-        test: /\.js$/,
-        enforce: "pre",
-        use: ["source-map-loader"],
       },
     ],
   },
