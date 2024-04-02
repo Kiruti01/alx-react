@@ -1,24 +1,21 @@
-import $ from 'jquery';
-import _ from 'lodash';
-import img from '../assets/holberton-logo.jpg';
+"use strict";
 import "../css/main.css";
+const $ = require("jquery");
+const _ = require("lodash");
 
-$('body').append("<div id=logo></div>");
-$('body').append("<p>Holberton Dashboard</p>");
-$('body').append("<p>Dashboard data for the students</p>");
-$('body').append("<button>Click here to get started</button");
-$('body').append("<p id='count'></p>");
-$('body').append("<p>Copyright - Holberton School</p>");
+$("body").append("<p>Holberton Dashboard</p>");
+$("body").append("<p>Dashboard data for the students</p>");
+$("body").append("<button>Click here to get started</button>");
+$("body").append('<p id="count"></p>');
+$("body").append("<p>Copyright - Holberton School</p>");
 
-let count = 0;
-let infoClick = "";
-let display = document.getElementById('count');
-function updateCounter() {
-    count++;
-    infoClick = `${count} clicks on the button`;
-    display.innerHTML = infoClick;
+const updateCounter = () => {
+  let clicks = $("#count").html() || 0;
+  $("button").on("click", () => {
+    clicks++;
+    $("#count").html(`${clicks} clicks on the button`);
+  });
 };
 
-$('button').on('click', _.debounce(function()  {
-    updateCounter();
-}, 300));
+_.debounce(updateCounter, 500);
+updateCounter();
