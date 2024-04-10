@@ -49,11 +49,7 @@ class App extends React.Component {
             <Notifications listNotifications={this.listNotifications} />
             <Header />
           </div>
-          {this.props.isLoggedIn ? (
-            <CourseList listCourses={this.listCourses} />
-          ) : (
-            <Login />
-          )}
+          {this.props.isLoggedIn ? <CourseList listCourses={this.listCourses} /> : <Login />}
           <Footer />
         </div>
       </React.Fragment>
