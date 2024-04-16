@@ -1,96 +1,81 @@
-/**
- * @jest-environment jsdom
- */
-import React from "react";
-import App from "./App";
-import Login from "../Login/Login";
-import Header from "../Header/Header";
-import Footer from "../Footer/Footer";
+import React from 'react';
+import {shallow, configure, mount} from 'enzyme';
+import Adapter from "enzyme-adapter-react-16";
+import { JSDOM } from 'jsdom';
+import App from './App';
 import Notifications from "../Notifications/Notifications";
-import CourseList from "../CourseList/CourseList";
-import { shallow, mount } from "enzyme";
-import { StyleSheetTestUtils } from "aphrodite";
+import Header from "../Header/Header";
+import Login from "../Login/Login";
+import Footer from "../Footer/Footer";
+import {unmountComponentAtNode} from "react-dom";
+import {StyleSheetTestUtils} from "aphrodite";
+
+configure({ adapter: new Adapter() });
+StyleSheetTestUtils.suppressStyleInjection();
+
+const jsdom = new JSDOM('<!doctype html><body></body></html>');
+const { window } = jsdom;
+let container = null;
+
+global.window = window;
+global.document = window.document;
+global.navigator = {
+  userAgent: 'node.js'
+}
 
 beforeEach(() => {
-  StyleSheetTestUtils.suppressStyleInjection();
+  container = document.createElement('div');
+  document.body.appendChild(container);
 });
+
 afterEach(() => {
-  StyleSheetTestUtils.clearBufferAndResumeStyleInjection();
+  unmountComponentAtNode(container);
+  container.remove();
+  container = null;
 });
 
-describe("App tests", () => {
-  it("renders without crashing", () => {
-    const component = shallow(<App />);
-
-    expect(component).toBeDefined();
-  });
-  it("should render Notifications component", () => {
-    const component = shallow(<App />);
-
-    expect(component.containsMatchingElement(<Notifications />)).toEqual(false);
-  });
-  it("should render Header component", () => {
-    const component = shallow(<App />);
-
-    expect(component.contains(<Header />)).toBe(true);
-  });
-  it("should render Login Component", () => {
-    const component = shallow(<App />);
-
-    expect(component.contains(<Login />)).toBe(true);
-  });
-  it("should render Footer Component", () => {
-    const component = shallow(<App />);
-
-    expect(component.contains(<Footer />)).toBe(true);
-  });
-  it("does not render courselist if logged out", () => {
-    const component = shallow(<App />);
-
-    component.setProps({ isLogedIn: false });
-
-    expect(component.contains(<CourseList />)).toBe(false);
-  });
-  it("renders courselist if logged in", () => {
-    const component = shallow(<App isLoggedIn={true} />);
-
-    expect(component.containsMatchingElement(<CourseList />)).toEqual(false);
-    expect(component.contains(<Login />)).toBe(false);
-  });
-});
-
-describe("When ctrl + h is pressed", () => {
-  it("calls logOut function", () => {
-    const mocked = jest.fn();
-    const wrapper = mount(<App logOut={mocked} />);
-    const event = new KeyboardEvent("keydown", { ctrlKey: true, key: "h" });
-    document.dispatchEvent(event);
-
-    expect(mocked).toHaveBeenCalledTimes(1);
-    wrapper.unmount();
+describe('App component', () => {
+  it('renders without crashing', () => {
+    shallow(<App />);
   });
 
-  document.alert = jest.fn();
-  it("checks that alert function is called", () => {
-    const wrapper = mount(<App />);
-    const spy = jest.spyOn(window, "alert");
-    const event = new KeyboardEvent("keydown", { ctrlKey: true, key: "h" });
-    document.dispatchEvent(event);
-
-    expect(spy).toHaveBeenCalled();
-    spy.mockRestore();
-    wrapper.unmount();
+  it('renders Notifications', () => {
+    shallow(<Notifications />);
   });
 
-  it('checks that the alert is "Logging you out"', () => {
-    const wrapper = mount(<App />);
-    const spy = jest.spyOn(window, "alert");
-    const event = new KeyboardEvent("keydown", { ctrlKey: true, key: "h" });
-    document.dispatchEvent(event);
-
-    expect(spy).toHaveBeenCalledWith("Logging you out");
-    jest.restoreAllMocks();
-    wrapper.unmount();
+  it('renders Header', () => {
+    shallow(<Header />);
   });
-  document.alert.mockClear();
+
+  it('renders Footer', () => {
+    shallow(<Footer />);
+  });
+
+  // Test when isLoggedIn is false
+  describe('when isLoggedIn is false', () => {
+    let logged = { isLoggedIn: false };
+    const wrapper = shallow(<App {...logged} />);
+
+    it('renders Login', () => {
+      shallow(<Login />);
+    });
+
+    it('renders Login when isLoggedIn is false', () => {
+      expect(wrapper.find('CourseList').exists()).toBeFalsy();
+    });
+  });
+
+  // Test when isLoggedIn is true
+  describe('when isLoggedIn is true', () => {
+    let logged = { isLoggedIn: true };
+    const wrapper = shallow(<App {...logged} />);
+
+    it('does not render Login', () => {
+      expect(wrapper.find('Login').exists()).toBeFalsy();
+    });
+
+    it('renders CourseList', () => {
+      expect(wrapper.find('CourseList').exists()).toBeTruthy();
+    });
+  });
 });

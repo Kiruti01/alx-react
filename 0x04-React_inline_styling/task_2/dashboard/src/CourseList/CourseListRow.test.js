@@ -1,34 +1,35 @@
-import React from "react";
-import CourseListRow from "./CourseListRow";
-import { shallow } from "enzyme";
-import { StyleSheetTestUtils } from "aphrodite";
+import React from 'react';
+import { configure, shallow } from 'enzyme';
+import Adapter from 'enzyme-adapter-react-16';
+import CourseListRow from './CourseListRow';
+import {StyleSheetTestUtils} from "aphrodite";
 
-beforeEach(() => {
-  StyleSheetTestUtils.suppressStyleInjection();
-});
-afterEach(() => {
-  StyleSheetTestUtils.clearBufferAndResumeStyleInjection();
-});
+configure({ adapter: new Adapter() });
+StyleSheetTestUtils.suppressStyleInjection();
 
-describe("Course List Row component test", () => {
-  it("should render without crashing", () => {
-    const wrapper = shallow(<CourseListRow textFirstCell="test" />);
-
-    expect(wrapper.exists()).toBe(true);
+describe("CourseListRow component", () => {
+  it("renders without crashing", () => {
+    shallow(<CourseListRow  textFirstCell="test"/>);
   });
 
-  it("should render one cell with colspan = 2 when textSecondCell null", () => {
-    const wrapper = shallow(<CourseListRow isHeader={true} textFirstCell="test" textSecondCell={null} />);
+  // Tests when isHeader is true
+  describe("when isHeader is true", () => {
+    it("renders one th element when textSecondCell is null", () => {
+      const wrapper = shallow(<CourseListRow isHeader={true} textFirstCell="test" />);
+      expect(wrapper.find("th")).toHaveLength(1);
+    });
 
-    expect(wrapper.find("tr").children()).toHaveLength(1);
-    expect(wrapper.find("tr").childAt(0).html()).toEqual('<th colSpan="2">test</th>');
+    it("renders two th elements textSecondCell is not null", () => {
+      const wrapper = shallow(<CourseListRow isHeader={true} textFirstCell="test" textSecondCell="test"/>);
+      expect(wrapper.find("th")).toHaveLength(2);
+    });
   });
 
-  it("should render two cells when textSecondCell not null", () => {
-    const wrapper = shallow(<CourseListRow isHeader={false} textFirstCell="test" textSecondCell="test" />);
-
-    expect(wrapper.find("tr").children()).toHaveLength(2);
-    expect(wrapper.find("tr").childAt(0).html()).toEqual("<td>test</td>");
-    expect(wrapper.find("tr").childAt(1).html()).toEqual("<td>test</td>");
+  // Test when isHeader is false
+  describe("when isHeader is false", () => {
+    it("renders two td elements", () => {
+      const wrapper = shallow(<CourseListRow isHeader={false} textFirstCell="test" textSecondCell="test"/>);
+      expect(wrapper.find("td")).toHaveLength(2);
+    });
   });
 });

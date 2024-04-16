@@ -1,12 +1,12 @@
-import PropTypes from "prop-types";
-import React, { Component } from "react";
+import React from "react";
+import {oneOfType, string, element} from "prop-types";
 import BodySection from "./BodySection";
-import "./BodySectionWithMarginBottom.css";
+import './BodySectionWithMarginBottom.css';
 
-class BodySectionWithMarginBottom extends Component {
+class BodySectionWithMarginBottom extends React.Component {
   render() {
     return (
-      <div className="bodySectionWithMargin">
+      <div className='bodySectionWithMargin'>
         <BodySection {...this.props} />
       </div>
     );
@@ -14,8 +14,8 @@ class BodySectionWithMarginBottom extends Component {
 }
 
 BodySectionWithMarginBottom.propTypes = {
-  title: PropTypes.string.isRequired,
-  children: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
-};
+  title: string.isRequired,
+  children: oneOfType([string, element]),
+}
 
 export default BodySectionWithMarginBottom;

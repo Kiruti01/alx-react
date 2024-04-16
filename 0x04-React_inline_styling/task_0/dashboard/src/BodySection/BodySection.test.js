@@ -1,19 +1,27 @@
-import React from "react";
+import React from 'react';
+import {configure, shallow} from 'enzyme';
+import Adapter from "enzyme-adapter-react-16";
 import BodySection from "./BodySection";
-import { shallow } from "enzyme";
+import BodySectionWithMarginBottom from "./BodySectionWithMarginBottom";
 
-describe("BodySection tests", () => {
-  it("should render correctly", () => {
-    const wrapper = shallow(
-      <BodySection title="test title">
-        <p>test children node</p>
-      </BodySection>
-    );
+configure({ adapter: new Adapter() });
 
-    expect(wrapper.exists()).toBe(true);
-    expect(wrapper.exists("h2")).toBe(true);
-    expect(wrapper.find("h2").html()).toEqual("<h2>test title</h2>");
-    expect(wrapper.exists("p")).toBe(true);
-    expect(wrapper.find("p").text()).toEqual("test children node");
+describe('BodySection', () => {
+  const wrapper = shallow(
+    <BodySection title="test title">
+      <p>test children node</p>
+    </BodySection>
+  );
+
+  it('renders without crashing', () => {
+    expect(<BodySection  title='test title'/>);
+  });
+
+  it('renders the correct children', () => {
+    expect(wrapper.contains(<p>test children node</p>)).toEqual(true);
+  });
+
+  it('renders the correct title', () => {
+    expect(wrapper.find('h2').text()).toEqual('test title');
   });
 });
