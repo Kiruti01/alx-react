@@ -1,24 +1,21 @@
-import React from 'react';
-import {configure, shallow} from 'enzyme';
-import Adapter from "enzyme-adapter-react-16";
+import React from "react";
+import { shallow } from "enzyme";
 import BodySectionWithMarginBottom from "./BodySectionWithMarginBottom";
-import {StyleSheetTestUtils} from "aphrodite";
+import BodySection from "./BodySection";
+import { StyleSheetTestUtils } from "aphrodite";
 
-configure({ adapter: new Adapter() });
-StyleSheetTestUtils.suppressStyleInjection();
+beforeEach(() => {
+  StyleSheetTestUtils.suppressStyleInjection();
+});
+afterEach(() => {
+  StyleSheetTestUtils.clearBufferAndResumeStyleInjection();
+});
 
-describe('BodySectionWithMarginBottom', () => {
-  const wrapper = shallow(
-    <BodySectionWithMarginBottom title="test title"></BodySectionWithMarginBottom>
-  );
+describe("BodySectionWithMarginBottom tests", () => {
+  it("should apply margin bottom to child component", () => {
+    const wrapper = shallow(<BodySectionWithMarginBottom title="test title" />);
 
-  it('renders without crashing', () => {
-    shallow(<BodySectionWithMarginBottom title="test title"></BodySectionWithMarginBottom>);
-  });
-
-  it('renders the body section', () => {
-    expect(wrapper.find('BodySection')).toHaveLength(1);
-    expect(wrapper.find('BodySection').exists()).toBeTruthy();
-    expect(wrapper.find('BodySection').html()).toEqual('<div class="bodySection"><h2>test title</h2></div>');
+    expect(wrapper.find(BodySection)).toHaveLength(1);
+    expect(wrapper.find(BodySection).html()).toEqual('<div class="bodySection"><h2>test title</h2></div>');
   });
 });

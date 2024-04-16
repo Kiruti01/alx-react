@@ -1,22 +1,25 @@
-.menuItem {
-    width: 100%;
-    text-align: right;
-    margin-bottom: 5px;
-}
 .Notifications {
-    border: #df344b dashed 1px;
-    padding-left: 5px;
-    padding-right: 5vw;
-    overflow: auto;
-    position: relative;
-    float: right;
-    margin-bottom: 50px;
+  padding: 1em;
+  border: 2px dashed red;
+  position: absolute;
+  top: 1.8em;
+  right: 0;
 }
 
-.NotificationItem.default {
-    color: blue;
+.notification-header {
+  display: flex;
+  justify-content: space-between;
 }
 
-.NotificationItem.urgent {
-    color: red;
+.menuItem {
+  text-align: right;
+}
+
+[data-notification-type="default"] {
+  color: blue;
+}
+
+[data-urgent],
+[data-notification-type="urgent"] {
+  color: red;
 }

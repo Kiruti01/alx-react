@@ -1,47 +1,49 @@
-import React from 'react';
-import { configure, shallow } from 'enzyme';
-import Adapter from 'enzyme-adapter-react-16';
-import CourseList from './CourseList';
+import React from "react";
+import CourseList from "./CourseList";
 import CourseListRow from "./CourseListRow";
-import {StyleSheetTestUtils} from "aphrodite";
+import { shallow } from "enzyme";
+import { StyleSheetTestUtils } from "aphrodite";
 
-configure({ adapter: new Adapter() });
-StyleSheetTestUtils.suppressStyleInjection();
+beforeEach(() => {
+  StyleSheetTestUtils.suppressStyleInjection();
+});
+afterEach(() => {
+  StyleSheetTestUtils.clearBufferAndResumeStyleInjection();
+});
 
-describe("CourseList component", () => {
-  it("renders without crashing", () => {
-    shallow(<CourseList />);
+const listCourses = [
+  { id: 1, name: "ES6", credit: 60 },
+  { id: 2, name: "Webpack", credit: 20 },
+  { id: 3, name: "React", credit: 40 },
+];
+
+describe("CourseList component tests", () => {
+  it("should render without crashing", () => {
+    const wrapper = shallow(<CourseList />);
+
+    expect(wrapper.exists()).toBe(true);
   });
 
-  // Test when listCourses is empty or null
-  describe("when listCourses is empty or null", () => {
-    let wrapper;
-    beforeEach(() => {
-      wrapper = shallow(<CourseList listCourses={[]} />);
-    });
-    it("renders 'No course available yet' when listCourses is an empty array", () => {
-      expect(wrapper.text()).toContain('No course available yet');
+  it("renders 5 different rows", () => {
+    const wrapper = shallow(<CourseList listCourses={listCourses} />);
+
+    expect(wrapper.find("thead").children()).toHaveLength(2);
+    wrapper.find("thead").forEach((node) => {
+      expect(node.equals(<CourseListRow textFirstCell="Course name" textSecondCell="Credit" isHeader={true} />));
     });
 
-    it("renders 'No course available yet' when listCourses is not provided", () => {
-      expect(wrapper.text()).toContain('No course available yet');
-    });
+    expect(wrapper.find("tbody").children()).toHaveLength(3);
+    expect(wrapper.find("tbody").childAt(0).html()).toEqual('<tr class="normal_y7r86x"><td>ES6</td><td>60</td></tr>');
+    expect(wrapper.find("tbody").childAt(1).html()).toEqual('<tr class="normal_y7r86x"><td>Webpack</td><td>20</td></tr>');
+    expect(wrapper.find("tbody").childAt(2).html()).toEqual('<tr class="normal_y7r86x"><td>React</td><td>40</td></tr>');
   });
 
-  // Test when listCourses is not empty
-  describe("when listCourses is not empty", () => {
-    let wrapper;
-    const courses = [
-      { id: 1, name: "Course 1", credit: 3 },
-      { id: 2, name: "Course 2", credit: 4 },
-      { id: 3, name: "Course 3", credit: 3 },
-    ];
-    beforeEach(() => {
-      wrapper = shallow(<CourseList listCourses={courses} />);
-    });
+  it("renders correctely when passed a list of courses", () => {
+    const wrapper = shallow(<CourseList listCourses={listCourses} />);
 
-    it("renders the correct number of CourseListRow components when listCourses contains data", () => {
-      expect(wrapper.find(CourseListRow)).toHaveLength(courses.length + 2);
-    });
+    expect(wrapper.find("tbody").children()).toHaveLength(3);
+    expect(wrapper.find("tbody").childAt(0).html()).toEqual('<tr class="normal_y7r86x"><td>ES6</td><td>60</td></tr>');
+    expect(wrapper.find("tbody").childAt(1).html()).toEqual('<tr class="normal_y7r86x"><td>Webpack</td><td>20</td></tr>');
+    expect(wrapper.find("tbody").childAt(2).html()).toEqual('<tr class="normal_y7r86x"><td>React</td><td>40</td></tr>');
   });
 });
