@@ -15,7 +15,7 @@ class App extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = { 
+    this.state = {
       displayDrawer: false,
       user: user,
       logOut: this.logOut,
@@ -82,35 +82,42 @@ class App extends React.Component {
 
   render() {
     return (
-      <React.Fragment>
-        <div className={css(styles.App)}>
-          <div className="heading-section">
-            <Notifications
-              listNotifications={this.listNotifications}
-              displayDrawer={this.state.displayDrawer}
-              handleDisplayDrawer={this.handleDisplayDrawer}
-              handleHideDrawer={this.handleHideDrawer}
-            />
-            <Header />
+      <AppContext.Provider
+        value={{
+          user: this.state.user,
+          logout: this.state.logOut,
+        }}
+      >
+        <React.Fragment>
+          <div className={css(styles.App)}>
+            <div className="heading-section">
+              <Notifications
+                listNotifications={this.listNotifications}
+                displayDrawer={this.state.displayDrawer}
+                handleDisplayDrawer={this.handleDisplayDrawer}
+                handleHideDrawer={this.handleHideDrawer}
+              />
+              <Header />
+            </div>
+            {this.state.user.isLoggedIn ? (
+              <BodySectionWithMarginBottom title="Course list">
+                <CourseList listCourses={this.listCourses} />
+              </BodySectionWithMarginBottom>
+            ) : (
+              <BodySectionWithMarginBottom title="Log in to continue">
+                <Login logIn={this.logIn} />
+              </BodySectionWithMarginBottom>
+            )}
+            <BodySection title="News from the school">
+              <p>
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Perspiciatis at tempora odio, necessitatibus repudiandae reiciendis cum nemo sed asperiores ut molestiae eaque aliquam illo
+                ipsa iste vero dolor voluptates.
+              </p>
+            </BodySection>
+            <Footer />
           </div>
-          {this.props.isLoggedIn ? (
-            <BodySectionWithMarginBottom title="Course list">
-              <CourseList listCourses={this.listCourses} />
-            </BodySectionWithMarginBottom>
-          ) : (
-            <BodySectionWithMarginBottom title="Log in to continue">
-              <Login />
-            </BodySectionWithMarginBottom>
-          )}
-          <BodySection title="News from the school">
-            <p>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Perspiciatis at tempora odio, necessitatibus repudiandae reiciendis cum nemo sed asperiores ut molestiae eaque aliquam illo ipsa
-              iste vero dolor voluptates.
-            </p>
-          </BodySection>
-          <Footer />
-        </div>
-      </React.Fragment>
+        </React.Fragment>
+      </AppContext.Provider>
     );
   }
 }

@@ -1,6 +1,9 @@
+/**
+ * @jest-environment jsdom
+ */
 import React from "react";
 import Header from "./Header";
-import { shallow } from "enzyme";
+import { mount, shallow } from "enzyme";
 import { StyleSheetTestUtils } from "aphrodite";
 import { AppContext } from "../App/AppContext";
 

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import logo from "../assets/holberton-logo.jpg";
 import { StyleSheet, css } from "aphrodite";
 import { AppContext } from "../App/AppContext";
@@ -39,6 +39,10 @@ const styles = StyleSheet.create({
   img: {
     width: "200px",
     height: "200px",
+  },
+
+  greeting: {
+    marginTop: "1rem",
   },
 });
 

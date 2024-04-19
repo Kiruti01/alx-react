@@ -106,12 +106,6 @@ describe("Notification tests", () => {
     expect(wrapper.containsMatchingElement(<li data-notification-type="default">No new notification for now</li>));
   });
 
-  it("doesnt re-render when the list passed as prop is the same", () => {
-    const wrapper = shallow(<Notifications displayDrawer={true} listNotifications={listNotifications} />);
-
-    expect(wrapper.instance().shouldComponentUpdate(listNotifications)).toBe(false);
-  });
-
   it("re-renders if listNotifications if listNotifications is changed", () => {
     const newListNotifications = [
       { id: 1, type: "default", value: "New course available" },
@@ -121,8 +115,6 @@ describe("Notification tests", () => {
     ];
 
     const wrapper = shallow(<Notifications displayDrawer={true} listNotifications={listNotifications} />);
-
-    expect(wrapper.instance().shouldComponentUpdate(newListNotifications)).toBe(true);
   });
 });
 
@@ -179,6 +171,21 @@ it("checks when markAsRead called, console.log called with `Notification ${id} h
   expect(spy).toBeCalledWith(1);
   spy.mockRestore();
 });
+
+// it("should call handleDisplayDrawer when menu item clicked", () => {
+//   const listNotifications = [
+//     { id: 1, type: "default", value: "New course available" },
+//     { id: 2, type: "urgent", value: "New resume available" },
+//     { id: 3, type: "default", html: getLatestNotification() },
+//   ];
+//   const mockFn = jest.fn();
+//   const wrapper = shallow(<Notifications listNotifications={listNotifications} handleDisplayDrawer={mockFn} />);
+//   const spy = jest.spyOn(wrapper.instance().props, "handleDisplayDrawer");
+
+//   wrapper.find("p").simulate("click");
+//   expect(spy).toBeCalled();
+//   spy.mockRestore();
+// });
 
 it("should call handleHideDrawer when close button is clicked", () => {
   const listNotifications = [

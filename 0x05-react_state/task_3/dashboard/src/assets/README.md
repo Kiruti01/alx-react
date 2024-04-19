@@ -1,1 +1,0 @@
-Contains logos and icons

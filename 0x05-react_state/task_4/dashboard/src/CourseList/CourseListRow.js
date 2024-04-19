@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import PropTypes from "prop-types";
 import { StyleSheet, css } from "aphrodite";
 
@@ -13,28 +13,33 @@ function CourseListRow({ isHeader, textFirstCell, textSecondCell }) {
   };
 
   return (
-    <tr className={isHeader ? css(styles.header) : css(styles.normal)}>
+    <tr style={selected_style} className={checked ? css(rowsStyles.rowChecked) : ""}>
       {isHeader ? (
         textSecondCell === null ? (
-          <th colSpan={2}>{textFirstCell}</th>
+          <th colSpan="2" className={css(rowsStyles.thcenter)}>
+            {textFirstCell}
+          </th>
         ) : (
           <>
-            <th>{textFirstCell}</th>
-            <th style={headerStyle}>{textSecondCell}</th>
+            <th className={css(rowsStyles.th)}>{textFirstCell}</th>
+            <th className={css(rowsStyles.th)}>{textSecondCell}</th>
           </>
         )
       ) : (
         <>
-          <td>{textFirstCell}</td>
-          <td>{textSecondCell}</td>
+          <td className={css(rowsStyles.td)}>
+            <input type="checkbox" onChange={handleCheckChange} />
+            {textFirstCell}
+          </td>
+          <td className={css(rowsStyles.td)}>{textSecondCell}</td>
         </>
       )}
     </tr>
   );
 }
 
-const rowStyles = StyleSheet.create({
-   thcenter: {
+const rowsStyles = StyleSheet.create({
+  thcenter: {
     borderBottom: "1px solid gray",
     margin: 0,
     padding: 0,

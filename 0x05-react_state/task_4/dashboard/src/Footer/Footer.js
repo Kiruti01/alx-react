@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import "./Footer.css";
 import { getFullYear, getFooterCopy } from "../utils/utils";
 import { AppContext } from "../App/AppContext";
@@ -14,7 +14,7 @@ function Footer() {
             <a href="#">Contact us</a>
           </p>
         )}
-	<p>
+        <p>
           Copyright {getFullYear()} - {getFooterCopy()}
         </p>
       </div>

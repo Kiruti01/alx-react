@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { StyleSheet, css } from "aphrodite";
 
 function Login() {
@@ -34,12 +34,12 @@ function Login() {
     <React.Fragment>
       <div className={css(styles["App-body"])}>
         <p>Login to access the full dashboard</p>
-        <form>
+        <form onSubmit={handleLoginSubmit}>
           <label htmlFor="email">Email:</label>
-          <input className={css(styles.input)} type="email" name="email"></input>
+          <input className={css(styles.input)} type="email" id="email" name="email" value={email} onChange={handleChangeEmail} />
           <label htmlFor="password">Password:</label>
-          <input className={css(styles.input)} type="password" name="password"></input>
-          <button>OK</button>
+          <input className={css(styles.input)} type="password" id="password" name="password" value={password} onChange={handleChangePassword} />
+          <input type="submit" value="Ok" disabled={!enableSubmit} />
         </form>
       </div>
     </React.Fragment>
