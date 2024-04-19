@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
-import PropTypes from 'prop-types';
-import { StyleSheet, css } from 'aphrodite';
+import React from "react";
+import PropTypes from "prop-types";
+import { StyleSheet, css } from "aphrodite";
 
 function CourseListRow({ isHeader, textFirstCell, textSecondCell }) {
   const [checked, setChecked] = useState(false);
-  const headerStyle = {backgroundColor: '#deb5b545'};
-  const rowStyle = {backgroundColor: '#f5f5f5ab'};
+  const headerStyle = { backgroundColor: "#deb5b545" };
+  const rowStyle = { backgroundColor: "#f5f5f5ab" };
   const selected_style = isHeader ? headerStyle : rowStyle;
 
   const handleCheckChange = (e) => {
@@ -13,60 +13,56 @@ function CourseListRow({ isHeader, textFirstCell, textSecondCell }) {
   };
 
   return (
-    <tr style={selected_style} className={checked ? css(rowsStyles.rowChecked) : ''}>
-      {isHeader ?
-        textSecondCell === null ?
-          <th colSpan="2" className={css(rowsStyles.thcenter)}>{textFirstCell}</th>
-        :
+    <tr className={isHeader ? css(styles.header) : css(styles.normal)}>
+      {isHeader ? (
+        textSecondCell === null ? (
+          <th colSpan={2}>{textFirstCell}</th>
+        ) : (
           <>
-            <th className={css(rowsStyles.th)}>{textFirstCell}</th>
-            <th className={css(rowsStyles.th)}>{textSecondCell}</th>
+            <th>{textFirstCell}</th>
+            <th style={headerStyle}>{textSecondCell}</th>
           </>
-      :
+        )
+      ) : (
         <>
-          <td className={css(rowsStyles.td)}>
-            <input type="checkbox" onChange={handleCheckChange}/>
-            {textFirstCell}</td>
-          <td className={css(rowsStyles.td)}>{textSecondCell}</td>
+          <td>{textFirstCell}</td>
+          <td>{textSecondCell}</td>
         </>
-      }
+      )}
     </tr>
   );
 }
 
-const rowsStyles = StyleSheet.create({
-  thcenter: {
-    borderBottom: '1px solid gray',
+const rowStyles = StyleSheet.create({
+   thcenter: {
+    borderBottom: "1px solid gray",
     margin: 0,
     padding: 0,
-    textAlign: 'center'
+    textAlign: "center",
   },
   th: {
-    borderBottom: '1px solid gray',
+    borderBottom: "1px solid gray",
     margin: 0,
     padding: 0,
-    textAlign: 'left'
+    textAlign: "left",
   },
   td: {
-    paddingLeft: 3
+    paddingLeft: 3,
   },
   rowChecked: {
-    backgroundColor: '#e6e4e4'
-  }
+    backgroundColor: "#e6e4e4",
+  },
 });
 
 CourseListRow.defaultProps = {
   isHeader: false,
-  textSecondCell: null
+  textSecondCell: null,
 };
 
 CourseListRow.propTypes = {
   isHeader: PropTypes.bool,
   textFirstCell: PropTypes.string,
-  textSecondCell: PropTypes.oneOfType([
-    PropTypes.string,
-    PropTypes.number
-  ])
+  textSecondCell: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 };
 
 export default CourseListRow;

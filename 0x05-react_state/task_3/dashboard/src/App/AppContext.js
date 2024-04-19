@@ -1,9 +1,9 @@
 import React from "react";
 
 export const user = {
-  email: '',
-  password: '',
-  isLoggedIn: false
+  email: "",
+  password: "",
+  isLoggedIn: false,
 };
 
 export function logOut() {
@@ -11,6 +11,6 @@ export function logOut() {
 }
 
 export const AppContext = React.createContext({
-	user,
-	logOut
+  user,
+  logOut,
 });
